@@ -26,11 +26,14 @@ foreach (var atividade in listaDoBancoDeDados)
 {
     Console.WriteLine(atividade.ToString());
 }
-
-listaDoBancoDeDados.Where(re => 
-                    !listaDoFrontEnd.Any(a => a.Id == re.Id))
+//Aqui removemos do banco de dados os itens que não existem mais na lista atual que veio do Frontend.
+//Dentro do metodo ForEach utilize o seu repository.dbSet.Remove(a)
+//at é atividade do banco de dados que vamos verificar se existe na lista que veio do front
+//os itens que nao existirem na lista do banco de dados serão removidos. 
+listaDoBancoDeDados.Where(at => 
+                    !listaDoFrontEnd.Any(a => a.Id == at.Id))
                     .ToList()
-                    .ForEach(r=> listaDoBancoDeDados.Remove(r));
+                    .ForEach(a=> listaDoBancoDeDados.Remove(a));
 Console.WriteLine("\n***-Lista do banco após a remoção de itens que não existem na lista do Frontend-***\n");
 foreach (var atividade in listaDoBancoDeDados)
 {
@@ -38,7 +41,13 @@ foreach (var atividade in listaDoBancoDeDados)
     Console.WriteLine(atividade.ToString());
 }
 
-var listaParaRemover = listaDoBancoDeDados.Where(at => !listaDoFrontEnd.Any(a => a.Id == at.Id && a.Descricao == at.Descricao)).ToList();
+//Aqui vamos remover do banco de dados os itens que existem mas que estão diferentes e que precisam ser atualizados.
+var listaParaRemover = listaDoBancoDeDados.Where(at => 
+                                            !listaDoFrontEnd.Any(a => a.Id == at.Id && a.Descricao == at.Descricao))
+                                            .ToList();
+/*Aqui estou percorrendo a lista de itens que precisam ser removidos do banco de dados,
+ no caso utilize RemoveRange do repository.dbSet.RemoveRange(listaParaRemover)
+*/
 listaParaRemover.ForEach(atividade => listaDoBancoDeDados.Remove(atividade));
 
 Console.WriteLine("\n****-Lista do banco após remover itens que estão diferentes-****\n");
@@ -47,6 +56,8 @@ foreach (var atividade in listaDoBancoDeDados)
     Console.WriteLine(atividade.ToString());
 }
 
+//Aqui vamos serpar os itens que precisam ser inseridos novamente no Banco de Dados, tanto os novos itens quanto os que
+//sofreram alterações.
 var novasAtividades = listaDoFrontEnd.Where(atf=> !listaDoBancoDeDados.Any(atb=> atb.Id==atf.Id && atb.Descricao==atf.Descricao))
     .Select(a=> new Atividade
     {
@@ -59,6 +70,7 @@ foreach (var atividade in novasAtividades)
 {
     Console.WriteLine(atividade.ToString());
 }
+//Aqui estamos adicionando as novas atividades e as atividades que foram atualizadas.
 listaDoBancoDeDados.AddRange(novasAtividades);
 Console.WriteLine("\n****-Lista do Banco de Dados atualizado, contendo itens atualizados e alterados-****\n");
 

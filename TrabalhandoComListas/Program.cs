@@ -1,4 +1,9 @@
 ﻿using TrabalhandoComListas;
+
+//Links utilizados para estudo
+//O que é o Enumerable.Where Método https://learn.microsoft.com/pt-br/dotnet/api/system.linq.enumerable.where?view=net-8.0
+//O que é o Enumerable.Any Método : https://learn.microsoft.com/pt-br/dotnet/api/system.linq.enumerable.any?view=net-8.0
+//O que é o Enumerable.Select Método: https://learn.microsoft.com/pt-br/dotnet/api/system.linq.enumerable.select?view=net-8.0
 var listaDoFrontEnd = new List<Atividade>() {
 new Atividade(){Id=1,Descricao="Construção", DataCriacao=DateTime.Now },
 new Atividade(){Id=2,Descricao="Varejo Alterada", DataCriacao=DateTime.Now},
